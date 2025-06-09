@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل الدخول</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #83a4d4, #b6fbff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-box {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-box h2 {
+      margin-bottom: 20px;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .login-box button {
+      background-color: #007BFF;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .login-box button:hover {
+      background-color: #0056b3;
+    }
+    #output {
+      margin-top: 15px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>تسجيل الدخول</h2>
+    <input id="email" placeholder="البريد الإلكتروني" type="email" />
+    <input id="password" placeholder="كلمة المرور" type="password" />
+    <button onclick="login()">دخول</button>
+    <div id="output"></div>
+  </div>
+</body>
+</html>
