@@ -1,8 +1,7 @@
-
 // إعداد Firebase والمكتبات
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 import * as jspdf from 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
 
 const firebaseConfig = {
@@ -20,13 +19,13 @@ const db = getFirestore(app);
 const adminEmail = "AhmedalTalqani@gmail.com";
 
 function showLoginForm() {
-  document.getElementById('app').innerHTML = \`
+  document.getElementById('app').innerHTML = `
     <h2>تسجيل الدخول</h2>
     <input id="email" placeholder="البريد الإلكتروني"><br>
     <input id="password" type="password" placeholder="كلمة المرور"><br>
     <button onclick="login()">دخول</button>
     <div id="output"></div>
-  \`;
+  `;
 }
 
 window.login = async function (emailParam, passwordParam) {
