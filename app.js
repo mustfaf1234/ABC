@@ -1,5 +1,4 @@
 // الجزء الأول: إعداد Firebase وتسجيل الدخول وتحميل الواجهة import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js'; import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js'; import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
-
 import * as jspdf from 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'; import * as docx from 'https://cdn.jsdelivr.net/npm/docx@7.7.0/build/index.min.js';
 
 const firebaseConfig = { apiKey: "AIzaSyCqOK8dAsYVd3G5kv6rFbrkDfLhmgFOXAU", authDomain: "flight-scheduler-3daea.firebaseapp.com", projectId: "flight-scheduler-3daea", storageBucket: "flight-scheduler-3daea.appspot.com", messagingSenderId: "1036581965112", appId: "1:1036581965112:web:0bd21e436764ea4294c5cd", measurementId: "G-ZC0843FNX8" };
