@@ -1,18 +1,76 @@
-// الجزء الأول: إعداد Firebase وتسجيل الدخول وتحميل الواجهة import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js'; import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js'; import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
-import * as jspdf from 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'; import * as docx from 'https://cdn.jsdelivr.net/npm/docx@7.7.0/build/index.min.js';
+// إعداد Firebase والمكتبات
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+import * as jspdf from 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+import * as docx from 'https://cdn.jsdelivr.net/npm/docx@7.7.0/build/index.min.js';
 
-const firebaseConfig = { apiKey: "AIzaSyCqOK8dAsYVd3G5kv6rFbrkDfLhmgFOXAU", authDomain: "flight-scheduler-3daea.firebaseapp.com", projectId: "flight-scheduler-3daea", storageBucket: "flight-scheduler-3daea.appspot.com", messagingSenderId: "1036581965112", appId: "1:1036581965112:web:0bd21e436764ea4294c5cd", measurementId: "G-ZC0843FNX8" };
+// إعدادات Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCqOK8dAsYVd3G5kv6rFbrkDfLhmgFOXAU",
+  authDomain: "flight-scheduler-3daea.firebaseapp.com",
+  projectId: "flight-scheduler-3daea",
+  storageBucket: "flight-scheduler-3daea.appspot.com",
+  messagingSenderId: "1036581965112",
+  appId: "1:1036581965112:web:0bd21e436764ea4294c5cd",
+  measurementId: "G-ZC0843FNX8"
+};
 
-const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app); const adminEmail = "AhmedalTalqani@gmail.com";
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const adminEmail = "AhmedalTalqani@gmail.com";
 
-onAuthStateChanged(auth, (user) => { if (user) { localStorage.setItem("userEmail", user.email); loadFlightApp(); } else { const savedEmail = localStorage.getItem("userEmail"); const savedPassword = localStorage.getItem("userPassword"); if (savedEmail && savedPassword) { login(savedEmail, savedPassword); } else { showLoginForm(); } } });
+// مراقبة حالة تسجيل الدخول
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    localStorage.setItem("userEmail", user.email);
+    loadFlightApp();
+  } else {
+    const savedEmail = localStorage.getItem("userEmail");
+    const savedPassword = localStorage.getItem("userPassword");
+    if (savedEmail && savedPassword) {
+      login(savedEmail, savedPassword);
+    } else {
+      showLoginForm();
+    }
+  }
+});
 
-function showLoginForm() { document.getElementById('app').innerHTML = <h2>تسجيل الدخول</h2> <input id="email" placeholder="البريد الإلكتروني"><br> <input id="password" type="password" placeholder="كلمة المرور"><br> <button onclick="login()">دخول</button> <div id="output"></div>; }
+// عرض واجهة تسجيل الدخول
+function showLoginForm() {
+  document.getElementById('app').innerHTML = `
+    <h2>تسجيل الدخول</h2>
+    <input id="email" placeholder="البريد الإلكتروني"><br>
+    <input id="password" type="password" placeholder="كلمة المرور"><br>
+    <button onclick="login()">دخول</button>
+    <div id="output"></div>
+  `;
+}
 
-window.login = async function (emailParam, passwordParam) { const email = emailParam || document.getElementById("email").value; const password = passwordParam || document.getElementById("password").value; try { await signInWithEmailAndPassword(auth, email, password); localStorage.setItem("userEmail", email); localStorage.setItem("userPassword", password); document.getElementById("output").innerHTML = "<b>تم تسجيل الدخول</b>"; } catch { document.getElementById("output").innerText = "فشل تسجيل الدخول"; } };
+// تسجيل الدخول
+window.login = async function (emailParam, passwordParam) {
+  const email = emailParam || document.getElementById("email").value;
+  const password = passwordParam || document.getElementById("password").value;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    localStorage.setItem("userEmail", email);
+    localStorage.setItem("userPassword", password);
+    document.getElementById("output").innerHTML = "<b>تم تسجيل الدخول</b>";
+  } catch {
+    document.getElementById("output").innerText = "فشل تسجيل الدخول";
+  }
+};
 
-window.logout = async function () { await signOut(auth); localStorage.removeItem("userEmail"); localStorage.removeItem("userPassword"); showLoginForm(); };
+// تسجيل الخروج
+window.logout = async function () {
+  await signOut(auth);
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("userPassword");
+  showLoginForm();
+};
 
+// تحميل الواجهة الرئيسية بعد تسجيل الدخول
 function loadFlightApp() {
   const user = auth.currentUser;
   const isAdmin = user && user.email === adminEmail;
@@ -56,7 +114,10 @@ function loadFlightApp() {
   `;
 
   loadFlights();
-}window.saveFlights = async function () {
+}
+
+// حفظ الرحلات
+window.saveFlights = async function () {
   let savedCount = 0;
   for (let i = 1; i <= 5; i++) {
     const fields = [
@@ -80,6 +141,7 @@ function loadFlightApp() {
   loadFlights();
 };
 
+// تحميل الرحلات
 window.loadFlights = async function () {
   const nameFilter = document.getElementById("filterName")?.value.trim();
   const q = nameFilter ? query(collection(db, "flights"), where("name", "==", nameFilter)) : collection(db, "flights");
@@ -120,12 +182,16 @@ window.loadFlights = async function () {
   }
 };
 
+// حذف رحلة
 window.deleteFlight = async function (id) {
   if (confirm("هل أنت متأكد من حذف الرحلة؟")) {
     await deleteDoc(doc(db, "flights", id));
     loadFlights();
   }
-};window.exportSingleFlightToPDF = async function (id) {
+};
+
+// تصدير رحلة واحدة PDF
+window.exportSingleFlightToPDF = async function (id) {
   const snapshot = await getDocs(collection(db, "flights"));
   const docSnap = snapshot.docs.find(doc => doc.id === id);
   if (!docSnap) return;
@@ -133,7 +199,6 @@ window.deleteFlight = async function (id) {
   const d = docSnap.data();
   const { jsPDF } = jspdf;
   const pdf = new jsPDF();
-
   const content = `
   الاسم: ${d.name || ""}
   رقم الرحلة: ${d.fltno || ""}
@@ -149,11 +214,11 @@ window.deleteFlight = async function (id) {
   التاريخ: ${d.date || ""}
   ملاحظات: ${d.notes || ""}
   `;
-
   pdf.text(content, 10, 10);
   pdf.save(`flight_${d.fltno || "unknown"}.pdf`);
 };
 
+// تصدير جميع الرحلات PDF
 window.exportToPDF = async function () {
   const snapshot = await getDocs(collection(db, "flights"));
   const { jsPDF } = jspdf;
@@ -186,6 +251,7 @@ window.exportToPDF = async function () {
   pdf.save("flights.pdf");
 };
 
+// تصدير جميع الرحلات Word
 window.exportToWord = async function () {
   const snapshot = await getDocs(collection(db, "flights"));
   const { Document, Packer, Paragraph, TextRun } = docx;
